@@ -1,12 +1,11 @@
 export default {
-	async fetch(request: Request, /*env: Env,*/ ctx: ExecutionContext): Promise<Response> {
+	async fetch(request: Request, ctx: ExecutionContext): Promise<Response> {
 		let url = (new URL(request.url)).searchParams.get('url');
 		if (url == null) {
-			console.log("no url param")
 			return new Response(null);
 		} else {
-			console.log("proxying" + url)
 			var request: Request = new Request(url)
+
 			// set origin header just in case
 			request.headers.append('Origin', new URL(url).origin)
 			const response: Response = await fetch(request);
@@ -18,10 +17,9 @@ export default {
 			responseHeaders.append('Access-Control-Allow-Headers', '*');
 			responseHeaders.append('Access-Control-Allow-Credentials', 'true');
 
-			var modifiedResponse: Response = new Response(response.body, {
+			return new Response(response.body, {
 				headers: responseHeaders,
-			});
-			return modifiedResponse;
+			});;
 		}
 	},
 };
